@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+  <body>
+    <div class="lesson-content-text-body"><p>分支就是科幻电影里面的平行宇宙，当你正在电脑前努力学习Git的时候，另一个你正在另一个平行宇宙里努力学习SVN。</p>
+
+<p>如果两个平行宇宙互不干扰，那对现在的你也没啥影响。不过，在某个时间点，两个平行宇宙合并了，结果，你既学会了Git又学会了SVN！</p>
+
+<p>分支在实际中有什么用呢？假设你准备开发一个新功能，但是需要两周才能完成，第一周你写了50%的代码，如果立刻提交，由于代码还没写完，不完整的代码库会导致别人不能干活了。如果等代码全部写完再一次提交，又存在丢失每天进度的巨大风险。</p>
+
+<p>现在有了分支，就不用怕了。你创建了一个属于你自己的分支，别人看不到，还继续在原来的分支上正常工作，而你在自己的分支上干活，想提交就提交，直到开发完毕后，再一次性合并到原来的分支上，这样，既安全，又不影响别人工作。</p>
+
+<p>其他版本控制系统如SVN等都有分支管理，但是用过之后你会发现，这些版本控制系统创建和切换分支比蜗牛还慢，简直让人无法忍受，结果分支功能成了摆设，大家都不去用。</p>
+
+<p>但Git的分支是与众不同的，无论创建、切换和删除分支，Git在1秒钟之内就能完成！无论你的版本库是1个文件还是1万个文件。</p>
+
+</div>
+
+<div class="lesson-content-text-body"><p>在版本回退里，你已经知道，每次提交，Git都把它们串成一条时间线，这条时间线就是一个分支。<br>
+截止到目前，只有一条时间线，在Git里，这个分支叫主分支，即master分支。<br>
+HEAD严格来说不是指向提交，而是指向master，master才是指向提交的，所以，HEAD指向的就是当前分支。</p>
+
+<h1>初始态</h1>
+
+<p>一开始的时候，master分支是一条线，Git用master指向最新的提交，再用HEAD指向master，就能确定当前分支，以及当前分支的提交点：</p>
+
+<p><img alt="" src="http://7xjf2l.com2.z0.glb.qiniucdn.com/master3.jpg"></p>
+
+<h1>提交</h1>
+
+<p>每次提交，master分支都会向前移动一步，这样，随着你不断提交，master分支的线也越来越长：<br>
+<img alt="" src="http://7xjf2l.com2.z0.glb.qiniucdn.com/mastermove3.jpg"></p>
+
+<h1>创建分支</h1>
+
+<p>当我们创建新的分支，例如dev时，Git新建了一个指针叫dev，指向master相同的提交，再把HEAD指向dev，就表示当前分支在dev上：</p>
+
+<p><img alt="" src="http://7xjf2l.com2.z0.glb.qiniucdn.com/newbranch.jpg"></p>
+
+<p>你看，Git创建一个分支很快，因为除了增加一个dev指针，改改HEAD的指向，工作区的文件都没有任何变化！</p>
+
+<p>不过，从现在开始，对工作区的修改和提交就是针对dev分支了，比如新提交一次后，dev指针往前移动一步，而master指针不变：<br>
+<img alt="" src="http://7xjf2l.com2.z0.glb.qiniucdn.com/branchmove.jpg"></p>
+
+<h1>合并分支</h1>
+
+<p>假如我们在dev上的工作完成了，就可以把dev合并到master上。Git怎么合并呢？最简单的方法，就是直接把master指针指向dev的当前提交，就完成了合并：</p>
+
+<p><img alt="" src="http://7xjf2l.com2.z0.glb.qiniucdn.com/branchjoin.jpg"></p>
+
+<p>所以Git合并分支也很快！就改改指针，工作区内容也不变！</p>
+
+<h1>删除分支</h1>
+
+<p>合并完分支后，甚至可以删除dev分支。删除dev分支就是把dev指针给删掉，删掉后，我们就剩下了一条master分支：<br>
+<img alt="" src="http://7xjf2l.com2.z0.glb.qiniucdn.com/branch_join_delete.jpg"></p>
+
+<p>真是太神奇了，你看得出来有些提交是通过分支完成的吗？</p>
+
+<h1>下面开始实战。</h1>
+
+<p>首先，我们创建dev分支，然后切换到dev分支：</p>
+
+<pre>$ git checkout -b dev
+Switched to a new branch 'dev'
+</pre>
+
+<p>git checkout命令加上-b参数表示创建并切换，相当于以下两条命令：</p>
+
+<pre>$ git branch dev //创建dev分支
+$ git checkout dev //切换到dev分支
+</pre>
+
+<p>然后，用git branch命令查看当前分支：</p>
+
+<pre>$ git branch
+* dev
+  master
+</pre>
+
+<p>git branch命令会列出所有分支，当前分支前面会标一个*号。</p>
+
+<p>然后，我们就可以在dev分支上正常提交，比如对index.html做个修改，加上一行：</p>
+
+<pre>$ echo devbranch &gt;&gt; index.html
+</pre>
+
+<p>然后提交：</p>
+
+<pre>$ git add index.html
+$ git commit -m"add devbranch"
+[dev 2f92da3] add devbranch
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+</pre>
+
+<p>现在，dev分支的工作完成，我们就可以切换回master分支：</p>
+
+<pre>$ git checkout master
+Switched to branch 'master'
+</pre>
+
+<p>切换回master分支后，再查看一个index.html文件，刚才添加的内容不见了！<br>
+因为那个提交是在dev分支上，而master分支此刻的提交点并没有变：<br>
+git checkout &lt;branch&gt; 检出branch分支,更新HEAD以指向branch分支,以及用branch指向的树更新暂存区和工作区.<br>
+<strong>注意</strong> 只能重置那些在历史区里有的文件，没有的不会覆盖,也不会删除。切换分支的时候尽量保持一个干净的工作区。</p>
+
+<p><img alt="" src="http://7xjf2l.com2.z0.glb.qiniucdn.com/branchmoveback.jpg"></p>
+
+<p>现在，我们把dev分支的工作成果合并到master分支上：</p>
+
+<pre>$ git merge dev
+Updating d4b9890..2f92da3
+Fast-forward
+ index.html | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+</pre>
+
+<p>git merge命令用于合并指定分支到当前分支。合并后，再查看index.html的内容，就可以看到，和dev分支的最新提交是完全一样的。</p>
+
+<p>注意到上面的Fast-forward信息，Git告诉我们，这次合并是“快进模式”，也就是直接把master指向dev的当前提交，所以合并速度非常快。</p>
+
+<p>当然，也不是每次合并都能Fast-forward，我们后面会将其他方式的合并。</p>
+
+<p>合并完成后，就可以放心地删除dev分支了：</p>
+
+<pre>$ git branch -d dev
+Deleted branch dev (was 2f92da3).
+</pre>
+
+<p>删除后，查看git branch，就只剩下master分支了：</p>
+
+<pre>$ git branch
+* master
+</pre>
+
+<p>因为创建、合并和删除分支非常快，所以Git鼓励你使用分支完成某个任务，合并后再删掉分支，这和直接在master分支上工作效果是一样的，但过程更安全。</p>
+
+<h1>小结</h1>
+
+<p>Git鼓励大量使用分支：</p>
+
+<ul>
+	<li>查看分支：git branch</li>
+	<li>创建分支：git branch &lt;name&gt;</li>
+	<li>切换分支：git checkout &lt;name&gt;</li>
+	<li>创建+切换分支：git checkout -b &lt;name&gt;</li>
+	<li>合并某分支到当前分支：git merge &lt;name&gt;</li>
+	<li>删除分支：git branch -d &lt;name&gt;</li>
+	<li>放弃这次合并: git merge --abort</li>
+</ul>
+</div>
+<div class="lesson-content-text-body"><p>人生不如意之事十之八九，合并分支往往也不是一帆风顺的。</p>
+
+<h1>新建分支</h1>
+
+<p>准备新的feature1分支，继续我们的新分支开发：</p>
+
+<pre>$ git checkout -b feature
+Switched to a new branch 'feature'
+</pre>
+
+<h1>修改文件</h1>
+
+<p>修改index.html：</p>
+
+<pre>echo conflict &gt;&gt; index.html
+</pre>
+
+<h1>分支提交</h1>
+
+<p>在feature分支上提交：</p>
+
+<pre>$ git add index.html
+$ git commit -m"add conflict"
+[feature] add conflict          //在feature分支上进行提交
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+</pre>
+
+<h1>切换回master分支</h1>
+
+<pre>$ git checkout master
+</pre>
+
+<h1>master分支修改</h1>
+
+<p>在master分支上修改index.html：</p>
+
+<pre>echo master_conflict &gt;&gt; index.html
+</pre>
+
+<h1>master分支提交：</h1>
+
+<pre>$ git add index.html
+$ git commit -m "master_conflict"
+[master bf3e054] master_conflict
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+</pre>
+
+<p>现在，master分支和feature分支各自都分别有新的提交，变成了这样：</p>
+
+<p><img alt="" src="http://7xjf2l.com2.z0.glb.qiniucdn.com/merge_conflict.jpg"></p>
+
+<h1>分支合并</h1>
+
+<p>这种情况下，Git无法执行“快速合并”，只能试图把各自的修改合并起来，但这种合并就可能会有冲突，我们试试看：</p>
+
+<pre>$ git merge feature
+Auto-merging index.html
+CONFLICT (content): Merge conflict in index.html
+Automatic merge failed; fix conflicts and then commit the result.
+</pre>
+
+<p>果然冲突了！Git告诉我们，index.html文件存在冲突，必须手动解决冲突后再提交。git status也可以告诉我们冲突的文件：</p>
+
+<pre>$ git status
+On branch master //在master分支上
+You have unmerged paths.
+  (fix conflicts and run "git commit") //解决冲突并提交
+
+Unmerged paths:
+  (use "git add &lt;file&gt;..." to mark resolution) //手工解决冲突后执行 git add
+
+        both modified:   index.html //两个分支都修改了index.html
+
+no changes added to commit (use "git add" and/or "git commit -a") //没有需要提交的文件
+</pre>
+
+<p>我们可以直接查看index.html的内容：</p>
+
+<pre>$ cat index.html
+1
+2
+3
+diff
+edit1
+edit2
+devbranch
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
+master_conflict
+=======
+conflict
+&gt;&gt;&gt;&gt;&gt;&gt;&gt; feature
+</pre>
+
+<p>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD 和 ======= 中间的部分是master分支修改的内容<br>
+=======和&gt;&gt;&gt;&gt;&gt;&gt;&gt; feature是feature分支修改的内容</p>
+
+<h1>合并修改</h1>
+
+<p>我们只保留master修改的内容，然后保存：</p>
+
+<pre>$ cat index.html
+1
+2
+3
+diff
+edit1
+edit2
+devbranch
+master_conflict
+</pre>
+
+<h1>再提交：</h1>
+
+<pre>$ git add index.html
+$ git commit -m "fix conflict"
+[master d2a46d8] fix conflict
+</pre>
+
+<p>现在，master分支和feature分支变成了下图所示：</p>
+
+<p><img alt="" src="http://7xjf2l.com2.z0.glb.qiniucdn.com/masterjoin.jpg"></p>
+
+<p>用带参数的git log也可以看到分支的合并情况：</p>
+
+<p><img alt="" src="http://7xjf2l.com2.z0.glb.qiniucdn.com/mergelog.jpg"></p>
+
+<h1>最后，删除feature分支：</h1>
+
+<pre>$ git branch -d feature
+Deleted branch feature (was 5699c6c).
+</pre>
+
+<p>工作完成。</p>
+
+<h1>小结</h1>
+
+<p>当Git无法自动合并分支时，就必须首先解决冲突。<br>
+解决冲突后，再提交，合并完成。</p>
+
+<p>用 git log --graph --oneline命令可以看到分支合并图。</p>
+</div>
+<div class="lesson-content-text-body"><p>通常，合并分支时，如果可能，Git会用Fast forward模式，但这种模式下，删除分支后，会丢掉分支信息。</p>
+
+<p>如果要强制禁用Fast forward模式，Git就会在merge时生成一个新的commit，这样，从分支历史上就可以看出分支信息。</p>
+
+<p>下面我们实战一下--no-ff方式的git merge：</p>
+
+<h1>首先，仍然创建并切换dev分支：</h1>
+
+<pre>$ git checkout -b dev
+Switched to a new branch 'dev'
+</pre>
+
+<p>修改index.html文件，并提交一个新的commit：</p>
+
+<pre>$ echo no-ff &gt;&gt; index.html
+$ git add index.html
+$ git commit -m "add no-ff"
+[dev 0089faf] add no-ff
+1 file changed, 1 insertion(+)
+</pre>
+
+<h1>现在，我们切换回master：</h1>
+
+<pre>$ git checkout master
+Switched to branch 'master'
+</pre>
+
+<p>准备合并dev分支，请注意--no-ff参数，表示禁用Fast forward：</p>
+
+<pre>$ git merge --no-ff -m "merge with no-ff" dev
+Merge made by the 'recursive' strategy.
+ index.html | 1 +
+ 1 file changed, 1 insertion(+)
+</pre>
+
+<p>因为本次合并要创建一个新的commit，所以加上-m参数，把commit描述写进去。</p>
+
+<h1>合并后，我们用git log --graph --oneline看看分支历史：</h1>
+
+<p><img alt="" src="http://7xjf2l.com2.z0.glb.qiniucdn.com/noff.jpg"></p>
+
+<p>可以看到，不使用Fast forward模式，merge后就像这样：<br>
+<img alt="" src="http://7xjf2l.com2.z0.glb.qiniucdn.com/mergewithno-ff.jpg"></p>
+
+<h1>分支策略</h1>
+
+<p>在实际开发中，我们应该按照几个基本原则进行分支管理：</p>
+
+<p>首先，master分支应该是非常稳定的，也就是仅用来发布新版本，平时不能在上面干活；</p>
+
+<p>那在哪干活呢？干活都在dev分支上，也就是说，dev分支是不稳定的，到某个时候，比如1.0版本发布时，再把dev分支合并到master上，在master分支发布1.0版本；</p>
+
+<p>你和你的小伙伴们每个人都在dev分支上干活，每个人都有自己的分支，时不时地往dev分支上合并就可以了。</p>
+
+<p>所以，团队合作的分支看起来就像这样：</p>
+
+<p><img alt="" src="http://7xjf2l.com2.z0.glb.qiniucdn.com/masterpolicy.png"></p>
+
+<p>小结</p>
+
+<p>Git分支十分强大，在团队开发中应该充分应用。</p>
+
+<p>合并分支时，加上--no-ff参数就可以用普通模式合并，合并后的历史有分支，能看出来曾经做过合并，而fast forward合并就看不出来曾经做过合并。</p>
+</div>
+<div class="lesson-content-text-body"><p>软件开发中，bug就像家常便饭一样。有了bug就需要修复，在Git中，由于分支是如此的强大，所以，每个bug都可以通过一个新的临时分支来修复，修复后，合并分支，然后将临时分支删除。</p>
+
+<p>当你接到一个修复一个bug的任务时，很自然地，你想创建一个基于master的分支issue来修复它，但是，等等，当前正在dev上进行的工作还没有提交：</p>
+
+<pre>$ echo programing &gt; programing.txt
+$ git add programing.txt 新创建一个文件programing.txt并添加到暂存区
+$ echo programing &gt;&gt; index.html 给index.html中添加programing字符串
+
+$ git status
+On branch master
+Changes to be committed:
+  (use "git reset HEAD &lt;file&gt;..." to unstage)
+
+        new file:   programing.txt
+
+Changes not staged for commit:
+  (use "git add &lt;file&gt;..." to update what will be committed)
+  (use "git checkout -- &lt;file&gt;..." to discard changes in working directory)
+
+        modified:   index.html
+</pre>
+
+<p>并不是你不想提交，而是工作只进行到一半，还没法提交，预计完成还需1天时间。但是，必须在两个小时内修复该bug，怎么办？</p>
+
+<p>幸好，Git还提供了一个stash功能，可以把当前工作现场“储藏”起来，等以后恢复现场后继续工作：</p>
+
+<pre>$ git stash
+Saved working directory and index state WIP on master: beebf73 merge with no-ff
+HEAD is now at beebf73 merge with no-ff
+</pre>
+
+<p>现在，用git status查看工作区，就是干净的（除非有没有被Git管理的文件），因此可以放心地创建分支来修复bug。</p>
+
+<p>首先确定要在哪个分支上修复bug，假定需要在master分支上修复，就从master创建临时分支：</p>
+
+<pre>$ git checkout -b issue
+Switched to a new branch 'issue'
+</pre>
+
+<h1>现在修复bug，增加一行 fixbug，然后提交：</h1>
+
+<pre>$ echo fixbug &gt;&gt; index.html
+$ git add index.html
+$ git commit -m "fixbug"
+[issue 2155b11] fixbug
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+</pre>
+
+<h1>修复完成后，切换到master分支，并完成合并</h1>
+
+<pre>$ git checkout master
+Switched to branch 'master'
+$ git merge --no-ff -m "merge issue" issue
+Merge made by the 'recursive' strategy.
+ index.html | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+</pre>
+
+<h1>最后删除issue分支：</h1>
+
+<pre>$ git branch -d issue
+Deleted branch issue (was 2155b11).
+</pre>
+
+<p>太棒了，原计划两个小时的bug修复只花了5分钟！现在，是时候接着回到dev分支干活了！</p>
+
+<pre>$ git checkout dev
+Switched to branch 'dev'
+</pre>
+
+<h1>git status干净</h1>
+
+<pre>$ git status
+On branch dev
+nothing to commit, working directory clean
+</pre>
+
+<p>工作区是干净的，刚才的工作现场存到哪去了？用git stash list命令看看：</p>
+
+<pre>$ git stash list
+stash@{0}: WIP on master: beebf73 merge with no-ff
+</pre>
+
+<p>工作现场还在，Git把stash内容存在某个地方了，但是需要恢复一下，有两个办法：</p>
+
+<p>一是用git stash apply恢复，但是恢复后，stash内容并不删除，你需要用git stash drop来删除；</p>
+
+<p>另一种方式是用git stash pop，恢复的同时把stash内容也删了：</p>
+
+<pre>$ git stash pop //应用并删除 stash
+On branch dev
+Changes to be committed:
+  (use "git reset HEAD &lt;file&gt;..." to unstage)
+
+        new file:   bug.txt
+
+Changes not staged for commit:
+  (use "git add &lt;file&gt;..." to update what will be committed)
+  (use "git checkout -- &lt;file&gt;..." to discard changes in working directory)
+
+        modified:   index.html
+
+Dropped refs/stash@{0} (4e618d8d75538052044054925cd72fd16479e72b) //删除此工作台
+</pre>
+
+<p>再用git stash list查看，就看不到任何stash内容了：</p>
+
+<pre>$ git stash list
+</pre>
+
+<p>你可以多次stash，恢复的时候，先用git stash list查看，然后恢复指定的stash，用命令：</p>
+
+<pre>$ git stash apply stash@{0}
+</pre>
+
+<h1>小结</h1>
+
+<p>修复bug时，我们会通过创建新的bug分支进行修复，然后合并，最后删除；</p>
+
+<p>当手头工作没有完成时，先把工作现场git stash一下，然后去修复bug.<br>
+修复后，再:</p>
+
+<ul>
+	<li>git stash list 查看一下有哪些stash</li>
+	<li>git stash apply 应用某个stash而不删除stash</li>
+	<li>git stash pop 应用某个stash并且删除stash</li>
+	<li>git stash clear 一次性清理所有的stash<br>
+	从而回到工作现场</li>
+</ul>
+</div>
+  </body>
+</html>

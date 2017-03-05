@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+  <body>
+    <div class="lesson-content-text-body"><p>你的本地仓库由 git 维护的三棵“树型(有层级关系)区域”组成。</p>
+
+<ul>
+	<li>第一个是你的 <strong>工作目录</strong>，对应你的物理目录,树型结构，也就是编辑代码的地方，写代码的地方；</li>
+	<li>第二个是 <strong>暂存区</strong>，工作区和历史提交的中间缓存，代表需要提交的工作状态，维护虚拟树型结构,临时保存你的改动；</li>
+	<li>最后是 <strong>历史区</strong>，树型结构，历史仓库,指向你最近一次提交后的结果。</li>
+</ul>
+
+<p>大部分时候是先提交到暂存区中，再提交到历史里面。也可以从历史记录里面检出数据到暂存区和工作区。</p>
+
+<p>.git文件夹中包括暂存区和历史区</p>
+
+<p><img alt="" src="http://7xjf2l.com2.z0.glb.qiniucdn.com/gitflow.jpg"></p>
+
+<p>Git和其他版本控制系统如SVN的一个不同之处就是有暂存区的概念。</p>
+</div>
+
+<div class="lesson-content-text-body"><p>我们了解下版本控制系统，其实只能跟踪 <strong>文本文件</strong> 的改动，比如TXT文件，网页，所有的程序代码等等，Git也不例外。<br>
+版本控制系统可以告诉你每次的改动，比如在第5行加了一个单词“卓景京培训”，在第8行删了一个单词“android”。而图片、视频这些 <strong>二进制文件</strong> ，虽然也能由版本控制系统理，但没法跟踪文件的变化，只能把二进制文件每次改动串起来，也就是只知道图片从100KB改成了120KB，但到底改了啥，版本控制系统不知道，也没法知道。<br>
+说明<br>
+echo xxx &gt; yyy.txt 表示把 xxx内容保存到yyy.txt中，你也可以打开记事本进行编辑，手工把xxx写入yyy.txt中并保存</p>
+
+<p>为了简明起见，我们创建一个 index.html 作为练习：</p>
+
+<pre>$ echo 1 &gt; index.html   // 把1输出到新创建的index.html文件中  &gt; 表示清空并写入
+$ echo 2 &gt;&gt; index.html // 追2加到index.html中 &gt;&gt;表示在原来文件的末尾追加
+$ cat index.html //查看文件内容
+1
+2
+</pre>
+
+<p>一定要保存到 <strong>zfpxgit</strong> 目录下（子目录也行），因为这是一个Git仓库，放到其他地方Git再厉害也找不到这个文件。</p>
+
+<p>用命令git add告诉Git，把文件添加到 <strong>仓库中的暂存区</strong> ：</p>
+
+<pre>$ git add index.html //把文件添加到暂存区
+warning: LF will be replaced by CRLF in index.html.
+The file will have its original line endings in your working directory.
+//警告: index.html 中的 /n将会被/r/n替换掉，在原始目录中文件将保留最原始的换行符
+//这个设置跟git-scm安装时的设置有关，因为在window下换行是\r\n,在linux下是\n
+</pre>
+
+<p>git add 实际上是个脚本命令，没有任何显示，说明添加成功。</p>
+</div>
+
+<div class="lesson-content-text-body"><p>用命令git commit告诉Git，把文件提交到仓库：</p>
+
+<pre>$ git commit index.html -m"在index.html中增加了 1 2"
+
+[master (root-commit) da19241] 在index.html中增加了 1 2  // da19241是这次提交的 commit ID,而且是在master分支上提交的
+
+ 1 file changed, 2 insertions(+)  //增加了个文件，插入2行
+ create mode 100644 index.html  //创建的文件权限模式是 比如一个文件是644，那么8进制=100644 数字含义请参考 [linux权限位](http://www.php100.com/html/program/linux/2013/0904/2490.html)
+</pre>
+
+<p>简单解释一下git commit命令，-m后面输入的是本次提交的说明，可以输入任意内容，当然最好是有意义的，这样你就能从历史记录里方便地找到改动记录。</p>
+
+<p>如果你没有添加-m参数的话表示会弹出一个编辑页面，可以输入你的注释然后按esc退出编辑模式，再输入:wq!退出此编辑器。<br>
+<img alt="" src="http://7xjf2l.com2.z0.glb.qiniucdn.com/gitvim.jpg"></p>
+
+<p>git commit命令执行成功后会告诉你，1个文件被改动（index.html文件），插入了两行内容（index.html有两行内容）。</p>
+
+<p>为什么Git添加文件需要add，commit一共两步呢？因为commit可以一次提交很多文件，所以你可以多次add不同的文件，比如：</p>
+
+<pre>$ git add file1.txt
+$ git add file2.txt file3.txt
+$ git commit -m "add 3 files."
+</pre>
+</div>
+
+<div class="lesson-content-text-body"><h1>工作区（Working Directory）</h1>
+
+<p>就是你在电脑里能看到的目录，比如我的zfpxgit文件夹就是一个工作区：<br>
+<img alt="" src="http://7xjf2l.com2.z0.glb.qiniucdn.com/area.jpg"></p>
+
+<h1>版本库（Repository）</h1>
+
+<p>工作区有一个隐藏目录.git，这个不算工作区，而是Git的版本库。<br>
+Git的版本库里存了很多东西，其中最重要的就是称为stage（或者叫index）的暂存区，<br>
+还有Git为我们自动创建的第一个分支master，以及指向master的一个指针叫HEAD。</p>
+
+<p><img alt="" src="http://7xjf2l.com2.z0.glb.qiniucdn.com/init.jpg"></p>
+
+<p>分支和HEAD的概念我们以后再讲。</p>
+
+<p>前面讲了我们把文件往Git版本库里添加的时候，是分两步执行的：</p>
+
+<p>第一步是用git add把文件添加进去，实际上就是把文件修改添加到暂存区；</p>
+
+<p>第二步是用git commit提交更改，实际上就是把暂存区的所有内容提交到当前分支。</p>
+
+<p>因为我们创建Git版本库时，Git自动为我们创建了唯一一个master分支，所以，现在，git commit就是往master分支上提交更改。</p>
+
+<p>你可以简单理解为，需要提交的文件修改通通放到暂存区，然后，一次性提交暂存区的所有修改。</p>
+
+<p>俗话说，实践出真知。现在，我们再练习一遍，先对index.html做个修改，比如加上一行内容 3：</p>
+
+<pre>Administrator@N7ALX5DWW6HPZRD /E/zfpxgit (master)
+$ cat index.html
+1
+2
+3
+</pre>
+
+<p>然后，在工作区新增一个index.js文本文件（内容随便写）。</p>
+
+<p>先用git status查看一下状态：<br>
+<img alt="" src="http://7xjf2l.com2.z0.glb.qiniucdn.com/status.jpg"><br>
+Git非常清楚地告诉我们，index.html被修改了，而index.js还从来没有被添加过，所以它的状态是Untracked。</p>
+
+<p>现在，使用两次命令git add，把index.html和index.js都添加后，用git status再查看一下：</p>
+
+<p>现在，暂存区的状态就变成这样了：</p>
+
+<p><img alt="" src="http://7xjf2l.com2.z0.glb.qiniucdn.com/addto.jpg"></p>
+
+<p>所以，git add命令实际上就是把要提交的所有修改放到暂存区（Stage），然后，执行git commit就可以一次性把暂存区的所有修改提交到分支。</p>
+
+<p>一旦提交后，如果你又没有对工作区做任何修改，那么工作区就是“干净”的：</p>
+
+<p>现在版本库变成了这样，工作区、暂存区和历史区完全一致：</p>
+
+<p><img alt="" src="http://7xjf2l.com2.z0.glb.qiniucdn.com/history.jpg"></p>
+
+<p>小结</p>
+
+<p>暂存区是Git非常重要的概念，弄明白了暂存区，就弄明白了Git的很多操作到底干了什么。</p>
+</div>
+  </body>
+</html>

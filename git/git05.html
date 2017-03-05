@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+  <body>
+    <div class="lesson-content-text-body"><p>发布一个版本时，我们通常先在版本库中打一个标签，这样，就唯一确定了打标签时刻的版本。将来无论什么时候，取某个标签的版本，就是把那个打标签的时刻的历史版本取出来。所以，标签也是版本库的一个快照。</p>
+
+<p>Git的标签虽然是版本库的快照，但其实它就是指向某个commit的指针（跟分支很像对不对？但是分支可以移动，标签不能移动），所以，创建和删除标签都是瞬间完成的。</p>
+</div>
+<div class="lesson-content-text-body"><h1>在Git中打标签非常简单</h1>
+
+<p>首先，切换到需要打标签的分支上：</p>
+
+<pre>$ git checkout master
+Switched to branch 'master'
+</pre>
+
+<h1>然后，敲命令git tag 就可以打一个新标签：</h1>
+
+<pre>$ git tag v1.0
+</pre>
+
+<h1>可以用命令git tag查看所有标签：</h1>
+
+<pre>$ git tag
+v1.0
+</pre>
+
+<p>默认标签是打在最新提交的commit上的。有时候，如果忘了打标签，比如，现在已经是周五了，但应该在周一打的标签没有打，怎么办？</p>
+
+<p>方法是找到历史提交的commit id，然后打上就可以了：</p>
+
+<pre>$ git log --oneline
+ded3e45 merge issue
+2155b11 fixbug
+beebf73 merge with no-ff
+...
+</pre>
+
+<p>比方说要对fixbug这次提交打标签，它对应的commit id是2155b11，敲入命令：</p>
+
+<pre>$ git tag v0.9 2155b11
+</pre>
+
+<p>再用命令git tag查看标签：</p>
+
+<pre>$ git tag
+v0.9
+v1.0
+</pre>
+
+<p>注意，标签不是按时间顺序列出，而是按字母排序的。可以用git show &lt;tagname&gt;查看标签信息：</p>
+
+<pre>$ git show v0.9
+commit 2155b1164ca64090a2f8e0146ba62bfbddbdf762
+Author: zhangrenyang-t510 &lt;zhang_renyang@&gt;
+Date:   Mon Oct 12 23:37:02 2015 +0800
+
+    fixbug
+
+diff --git a/index.html b/index.html
+</pre>
+
+<p>可以看到，v0.9确实打在fixbug这次提交上。</p>
+
+<h1>还可以创建带有说明的标签</h1>
+
+<p>用-a指定标签名，-m指定说明文字：</p>
+
+<pre>git tag -a v0.8 -m "merge with no-ff" beebf73
+</pre>
+
+<p>用命令git show 可以看到说明文字：</p>
+
+<pre>    $ git show v0.8
+    tag v0.8
+    Tagger: zhangrenyang-t510 &lt;zhang_renyang@&gt;
+    Date:   Tue Oct 13 00:03:46 2015 +0800
+
+    merge with no-ff
+</pre>
+
+<h1>最后内容如下</h1>
+
+<p><img alt="" src="http://7xjf2l.com2.z0.glb.qiniucdn.com/tags2.jpg"></p>
+
+<h1>切换标签</h1>
+
+<p>git checkout v0.8 因为tag指向了commit,所以也可以checkout, 他会提示你从head上进行了脱离，<br>
+git checkout -b v0.8 用当前的创建一个分支并切换到这个分支上面，而这个分支名还是指向我们的那个tag.</p>
+
+<h1>小结</h1>
+
+<ul>
+	<li>命令git tag &lt;name&gt;用于新建一个标签，默认为HEAD，也可以指定一个commit id；</li>
+	<li>git tag -a &lt;tagname&gt; -m "标签注释..." 可以指定标签信息；</li>
+	<li>命令git tag可以查看所有标签。</li>
+</ul>
+</div>
+  </body>
+</html>

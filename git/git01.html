@@ -1,0 +1,41 @@
+
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+  <body>
+
+    <div class="lesson-content-text-body"><p>版本库又名仓库，英文名repository，你可以简单理解成一个目录，这个目录里面的所有文件都可以被Git管理起来，每个文件的修改、删除，Git都能跟踪，以便任何时刻都可以追踪历史，或者在将来某个时刻可以“还原”。</p>
+
+    <p>所以，创建一个版本库非常简单，</p>
+
+    <h1>首先打开命令行</h1>
+
+    <p>如果使用windows系统，打开资源管理器，切换到E盘根目录,右键选择Git bash(安装git-scm后会有此选项)打开命令行。<br>
+    <img alt="" src="http://7xjf2l.com2.z0.glb.qiniucdn.com/gitbash.png"><br>
+    也可以按住shift键的同时，点击右键在此处打开命令行，都可以在当前目录打开命令行，并自动定位到当前目录。<br>
+    <img alt="" src="http://7xjf2l.com2.z0.glb.qiniucdn.com/gitcmd.png"></p>
+
+    <h1>创建一个空目录：</h1>
+
+    <p><img alt="" src="http://7xjf2l.com2.z0.glb.qiniucdn.com/mkdir.jpg"></p>
+
+    <p>pwd命令用于显示当前目录。在环境中这个仓库位于 <strong>/E/zfpxgit</strong>。</p>
+
+    <h1>初始化仓库</h1>
+
+    <p>通过git init命令把这个目录变成Git可以管理的仓库：</p>
+
+    <p><img alt="" src="http://7xjf2l.com2.z0.glb.qiniucdn.com/gitinit.jpg"></p>
+
+    <p>瞬间Git就把仓库建好了，而且告诉你是一个空的仓库（empty Git repository），细心的读者可以发现当前目录下多了一个.git的目录，这个目录是Git来跟踪管理版本库的，没事千万不要手动修改这个目录里面的文件，不然改乱了，就把Git仓库给破坏了。</p>
+
+    <p>如果你没有看到.git目录，那是因为这个目录默认是隐藏的，用ls -al命令就可以看见。<br>
+    <img alt="" src="http://7xjf2l.com2.z0.glb.qiniucdn.com/gitrepository.png"></p>
+    </div>
+
+  </body>
+</html>
